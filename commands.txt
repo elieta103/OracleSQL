@@ -1,0 +1,34 @@
+Base de datos:  localhost:1521
+Base de datos conexion : localhost:1521/XEPDB1
+URL de EM Express : https://localhost:5500/em
+
+CARGAR SCRIPT
+
+C:\Workspace\Code\cursosUdemy\OracleSQLCurso>sqlplus system/elieta103@localhost:1521/xepdb1
+start tablas_hr.sql
+
+select tname from tab;
+
+CUENTA PARA ADMINISTRADORES
+
+Desde el SQL-Developer Crear conexion para system:
+Nombre Conexion SYSTEM
+Usuario : system
+Password : elieta103
+Host: localhost
+Puerto : 1521
+Nombre del servicio : xepdb1
+
+Desbloquer usuario HR:
+ALTER USER HR ACCOUNT UNLOCK;
+ALTER USER HR IDENTIFIED BY hr;
+
+CUENTA PARA RECURSOS HUMANOS
+
+Desde el SQL-Developer Crear conexion para HR
+Nombre Conexion: Recursos Humanos
+Usuario : HR
+Password : hr
+Host: localhost
+Puerto : 1521
+Nombre del servicio : xepdb1
