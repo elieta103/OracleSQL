@@ -1,0 +1,85 @@
+-- 1. Joins Natural Using On
+-- Visualizar el nombre del país y el nombre de la región. (tablas COUNTRIES y REGIONS). Usar un natural join
+SELECT COUNTRY_NAME, REGION_NAME 
+    FROM REGIONS NATURAL JOIN COUNTRIES;
+
+
+-- Usando el ejemplo anterior visualizar también el nombre de la ciudad añadiendo una nueva tabla (LOCATIONS)
+SELECT COUNTRY_NAME, REGION_NAME, CITY
+    FROM REGIONS NATURAL JOIN COUNTRIES
+                 NATURAL JOIN LOCATIONS;
+                 
+-- Indicar el nombre del departamento y la media de sus salarios
+SELECT DEPARTMENT_NAME, ROUND(AVG(SALARY),2)
+    FROM EMPLOYEES JOIN DEPARTMENTS USING(DEPARTMENT_ID)
+GROUP BY DEPARTMENT_NAME;
+    
+
+-- Mostrar el nombre del departamento, el del manager a cargo y la ciudad a la que pertenece. 
+-- Debemos usar la cláusula ON y/o la cláusula USING para realizar la operación
+SELECT DEPARTMENT_NAME, FIRST_NAME, CITY
+    FROM EMPLOYEES JOIN DEPARTMENTS ON (EMPLOYEES.EMPLOYEE_ID = DEPARTMENTS.MANAGER_ID) --EMPLEADOS QUE SON MANAGERS
+                   JOIN LOCATIONS USING (LOCATION_ID);
+
+SELECT DEPARTMENT_NAME, FIRST_NAME, CITY
+    FROM EMPLOYEES JOIN DEPARTMENTS ON (EMPLOYEES.EMPLOYEE_ID = DEPARTMENTS.MANAGER_ID) --EMPLEADOS QUE SON MANAGERS
+                   JOIN LOCATIONS ON (LOCATIONS.LOCATION_ID=DEPARTMENTS.LOCATION_ID);
+                   
+
+
+-- Mostrar job_title, el department_name, el last_name de empleado y hire_date de todos los empleados que entraron entre el 2002 y el 2004. 
+-- Usar cláusulas using
+SELECT JOB_TITLE, DEPARTMENT_NAME, LAST_NAME, HIRE_DATE
+    FROM EMPLOYEES JOIN JOBS USING (JOB_ID)
+                   JOIN DEPARTMENTS USING (DEPARTMENT_ID)
+    WHERE TO_CHAR(HIRE_DATE, 'YYYY') BETWEEN 2002 AND 2004
+    ORDER BY HIRE_DATE;
+
+
+SELECT JOB_TITLE, DEPARTMENT_NAME, LAST_NAME, HIRE_DATE
+    FROM EMPLOYEES JOIN JOBS ON (JOBS.JOB_ID=EMPLOYEES.JOB_ID)
+                   JOIN DEPARTMENTS ON (DEPARTMENTS.DEPARTMENT_ID=EMPLOYEES.DEPARTMENT_ID)
+    WHERE TO_CHAR(HIRE_DATE, 'YYYY') BETWEEN 2002 AND 2004;
+    
+-- Mostrar el job_title y la media de los salarios de cada uno, siempre que la media supere los 7000
+SELECT JOB_TITLE, AVG(SALARY)
+    FROM EMPLOYEES JOIN JOBS ON (JOBS.JOB_ID=EMPLOYEES.JOB_ID)
+    HAVING AVG(SALARY)>7000
+    GROUP BY JOB_TITLE;
+    
+SELECT JOB_TITLE, AVG(SALARY)
+    FROM EMPLOYEES JOIN JOBS USING (JOB_ID)
+    HAVING AVG(SALARY)>7000
+    GROUP BY JOB_TITLE;
+
+SELECT JOB_TITLE, AVG(SALARY)
+    FROM EMPLOYEES NATURAL JOIN JOBS
+    HAVING AVG(SALARY)>7000
+    GROUP BY JOB_TITLE;    
+    
+-- Mostrar el nombre de la región y el número de departamentos en cada una de las regiones
+
+SELECT REGION_NAME, COUNT(*)
+    FROM DEPARTMENTS JOIN LOCATIONS USING (LOCATION_ID)
+                     JOIN COUNTRIES USING (COUNTRY_ID)
+                     JOIN REGIONS USING (REGION_ID)
+    GROUP BY REGION_NAME;
+    
+SELECT REGION_NAME, COUNT(*)
+    FROM DEPARTMENTS JOIN LOCATIONS ON (LOCATIONS.LOCATION_ID=DEPARTMENTS.LOCATION_ID)
+                     JOIN COUNTRIES ON (COUNTRIES.COUNTRY_ID=LOCATIONS.COUNTRY_ID)
+                     JOIN REGIONS ON (REGIONS.REGION_ID=COUNTRIES.REGION_ID)
+    GROUP BY REGION_NAME;
+
+SELECT REGION_NAME, COUNT(*)
+    FROM DEPARTMENTS NATURAL JOIN LOCATIONS
+                     NATURAL JOIN COUNTRIES 
+                     NATURAL JOIN REGIONS 
+    GROUP BY REGION_NAME;
+
+-- Mostrar el nombre del empleado, el departamento y el país donde trabaja (debemos usar la cláusual using)
+
+SELECT FIRST_NAME, DEPARTMENT_NAME, COUNTRY_NAME
+    FROM EMPLOYEES JOIN DEPARTMENTS USING (DEPARTMENT_ID)
+                   JOIN LOCATIONS USING(LOCATION_ID)
+                   JOIN COUNTRIES USING(COUNTRY_ID);
